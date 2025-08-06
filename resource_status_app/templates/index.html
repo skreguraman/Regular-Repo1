@@ -142,75 +142,108 @@
             {% endif %}
         </div>
         <div class="tab-nav">
-            <button class="tab-btn active" data-tab="tables">Summary Tables</button>
+            <button class="tab-btn active" data-tab="tab1">Open Positions</button>
+            <button class="tab-btn" data-tab="tab2">Closed Positions</button>
+            <button class="tab-btn" data-tab="tab3">Revenue Loss Positions</button>
+            <button class="tab-btn" data-tab="tab4">Delivery Risk Positions</button>
             <button class="tab-btn" data-tab="askbot">Ask Bot</button>
         </div>
-        <div id="tables" class="tab-content active">
-            {% if table1_valid %}
+        <div id="tab1" class="tab-content active">
+            {% if table_open_valid %}
             <div class="chart">
-                <div class="table-title">No of Positions Open by Tower, Skill, and Priority</div>
+                <div class="table-title">Summary of Open Positions by Skill, Location, Tower</div>
                 <table>
-                    <tr>
-                        <th>Tower</th>
-                        <th>Skill</th>
-                        <th>Priority</th>
-                        <th>No of Positions Open</th>
-                    </tr>
-                    {% for row in table1.values %}
-                    <tr>
-                        <td>{{ row[0] }}</td>
-                        <td>{{ row[1] }}</td>
-                        <td>{{ row[2] }}</td>
-                        <td>{{ row[3] }}</td>
-                    </tr>
-                    {% endfor %}
+                    <thead>
+                        <tr>
+                            {% for col in table_open.columns %}
+                                <th>{{ col }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in table_open.values.tolist() %}
+                            <tr>
+                                {% for cell in row %}
+                                    <td>{{ cell }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
                 </table>
             </div>
             {% endif %}
-            {% if table2 %}
+        </div>
+        <div id="tab2" class="tab-content">
+            {% if table_closed_valid %}
             <div class="chart">
-                <div class="table-title">No of Revenue Loss Positions vs Delivery Positions Open by Priority</div>
+                <div class="table-title">Summary of Closed Positions by Skill, Location, Tower</div>
                 <table>
-                    <tr>
-                        <th>Type</th>
-                        <th>Priority</th>
-                        <th>No of Positions Open</th>
-                    </tr>
-                    {% for prio, val in table2['Revenue Loss'].items() %}
-                    <tr>
-                        <td>Revenue Loss</td>
-                        <td>{{ prio }}</td>
-                        <td>{{ val }}</td>
-                    </tr>
-                    {% endfor %}
-                    {% for prio, val in table2['Delivery'].items() %}
-                    <tr>
-                        <td>Delivery</td>
-                        <td>{{ prio }}</td>
-                        <td>{{ val }}</td>
-                    </tr>
-                    {% endfor %}
+                    <thead>
+                        <tr>
+                            {% for col in table_closed.columns %}
+                                <th>{{ col }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in table_closed.values.tolist() %}
+                            <tr>
+                                {% for cell in row %}
+                                    <td>{{ cell }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
                 </table>
             </div>
             {% endif %}
-            {% if table3_valid %}
+        </div>
+        <div id="tab3" class="tab-content">
+            {% if table_revloss_valid %}
             <div class="chart">
-                <div class="table-title">No of Positions Closed by Tower, Skill, and Priority</div>
+                <div class="table-title">Revenue Loss Positions by Skill, Tower, Location</div>
                 <table>
-                    <tr>
-                        <th>Tower</th>
-                        <th>Skill</th>
-                        <th>Priority</th>
-                        <th>No of Positions Closed</th>
-                    </tr>
-                    {% for row in table3.values %}
-                    <tr>
-                        <td>{{ row[0] }}</td>
-                        <td>{{ row[1] }}</td>
-                        <td>{{ row[2] }}</td>
-                        <td>{{ row[3] }}</td>
-                    </tr>
-                    {% endfor %}
+                    <thead>
+                        <tr>
+                            {% for col in table_revloss.columns %}
+                                <th>{{ col }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in table_revloss.values.tolist() %}
+                            <tr>
+                                {% for cell in row %}
+                                    <td>{{ cell }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+        </div>
+        <div id="tab4" class="tab-content">
+            {% if table_deliveryrisk_valid %}
+            <div class="chart">
+                <div class="table-title">Delivery Risk Positions by Skill, Tower, Location</div>
+                <table>
+                    <thead>
+                        <tr>
+                            {% for col in table_deliveryrisk.columns %}
+                                <th>{{ col }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in table_deliveryrisk.values.tolist() %}
+                            <tr>
+                                {% for cell in row %}
+                                    <td>{{ cell }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
                 </table>
             </div>
             {% endif %}
