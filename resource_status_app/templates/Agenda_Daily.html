@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Daily Call Tracker (Cognizant Vibe Coding)</title>
+    <!-- Cognizant Logo and Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="https://upload.wikimedia.org/wikipedia/commons/6/6e/Cognizant_logo.png">
+    <style>
+        /* Cognizant Theme */
+        body {
+            font-family: 'Montserrat', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0058a3 0%, #00b1e2 100%);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            box-sizing: border-box;
+            color: #222;
+        }
+
+        #app {
+            background: rgba(255, 255, 255, 0.98);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 40px rgba(0, 88, 163, 0.10);
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-top: 0;
+            margin-bottom: 30px;
+        }
+
+        #print-btn {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: background-color 0.2s;
+        }
+
+        #print-btn:hover {
+            background-color: #0056b3;
+        }
+
+        h2 {
+            color: #34495e;
+            border-bottom: 2px solid #764ba2;
+            padding-bottom: 10px;
+            margin-top: 40px;
+        }
+
+        /* Tab Styles */
+        .tab-nav {
+            display: flex;
+            border-bottom: 2px solid #e0e0e0;
+            margin-bottom: 25px;
+        }
+        .tab-btn {
+            padding: 12px 25px;
+            cursor: pointer;
+            border: none;
+            background-color: transparent;
+            font-size: 17px;
+            font-weight: 500;
+            color: #555;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px; /* Align with the container's border */
+            transition: color 0.2s, border-color 0.2s;
+        }
+        .tab-btn.active, .tab-btn:hover {
+            color: #764ba2;
+            border-bottom-color: #764ba2;
+        }
+
+        /* Form Styles */
+        .form-container {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border: 1px solid #e9ecef;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+        
+        textarea {
+            grid-column: 1 / -1; /* Span full width */
+            resize: vertical;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #764ba2;
+            box-shadow: 0 0 0 2px rgba(118, 75, 162, 0.2);
+        }
+
+        .add-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #28a745, #218838);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: block;
+            width: 100%;
+        }
+
+        .add-btn:hover {
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* Table Styles */
+        .table-wrapper {
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: 600;
+            color: #555;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .delete-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .delete-btn:hover {
+            background: #c0392b;
+        }
+        
+        /* Risk-specific styles */
+        .impact-High {
+            border-left: 5px solid #e74c3c;
+        }
+        .impact-Medium {
+            border-left: 5px solid #f39c12;
+        }
+        .impact-Low {
+            border-left: 5px solid #2ecc71;
+        }
+
+        /* Tab Content Styles */
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Print-specific styles */
+        @media print {
+            body {
+                background: none;
+                padding: 0;
+                color: #000;
+            }
+            #app {
+                box-shadow: none;
+                border-radius: 0;
+                padding: 0;
+                max-width: 100%;
+                background: #fff;
+            }
+            .tab-nav, .form-container, .delete-btn, #print-btn {
+                display: none;
+            }
+            h1, h2 {
+                text-align: left;
+                border-bottom: 1px solid #ccc;
+                color: #000;
+            }
+            table, tr, td, th {
+                border: 1px solid #ccc !important;
+                page-break-inside: avoid;
+            }
+            tr {
+                background-color: #fff !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <div style="display: flex; align-items: center;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/6/6e/Cognizant_logo.png" alt="Cognizant Logo" style="height: 48px; margin-right: 18px;">
+                <h1 style="color: #0058a3; margin-bottom: 0; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 2.2rem;">Account Daily Call Tracker</h1>
+            </div>
+            <div style="text-align: right;">
+                <span style="font-family: 'Montserrat', sans-serif; font-size: 1.1rem; color: #764ba2; font-weight: 600; background: #f2f2f2; border-radius: 8px; padding: 8px 18px; box-shadow: 0 2px 8px rgba(0,88,163,0.08);">Vibe Coding</span>
+            </div>
+        </div>
+        <button id="print-btn">Print to PDF</button>
+        <div class="tab-nav">
+            <button class="tab-btn active" data-tab="resourcing">Open Requirements</button>
+            <button class="tab-btn" data-tab="risks">Delivery Risks</button>
+            <button class="tab-btn" data-tab="upskilling">Upskill Requirements</button>
+        </div>
+
+        <!-- Section for Resourcing Requirements -->
+        <div id="resourcing" class="tab-content active">
+            <h2>Open Resourcing Requirements</h2>
+            <div class="form-container">
+                <form id="requirement-form">
+                    <div class="form-grid">
+                        <input type="text" id="skill-input" placeholder="Skill" required>
+                        <input type="text" id="tower-input" placeholder="Tower" required>
+                        <select id="location-input">
+                            <option value="Onsite">Onsite</option>
+                            <option value="Offshore">Offshore</option>
+                        </select>
+                        <input type="text" id="raised-by-input" placeholder="Raised By" required>
+                        <input type="text" id="poc-input" placeholder="Client POC">
+                    </div>
+                    <button type="submit" class="add-btn">Add Requirement</button>
+                </form>
+            </div>
+            <div class="table-wrapper">
+                <table id="requirement-table">
+                    <thead>
+                        <tr>
+                            <th>Skill</th>
+                            <th>Tower</th>
+                            <th>Location</th>
+                            <th>Raised By</th>
+                            <th>Client POC</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="requirement-list"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Section for Delivery Risks -->
+        <div id="risks" class="tab-content">
+            <h2>Delivery Risks</h2>
+            <div class="form-container">
+                <form id="risk-form">
+                    <div class="form-grid">
+                        <input type="text" id="project-input" placeholder="Project Name" required>
+                        <select id="impact-input">
+                            <option value="Low">Low Impact</option>
+                            <option value="Medium">Medium Impact</option>
+                            <option value="High">High Impact</option>
+                        </select>
+                        <input type="text" id="risk-owner-input" placeholder="Owner" required>
+                    </div>
+                    <textarea id="risk-desc-input" placeholder="Risk Description" rows="3" required></textarea>
+                    <textarea id="mitigation-input" placeholder="Mitigation Plan" rows="3" required></textarea>
+                    <button type="submit" class="add-btn">Add Risk</button>
+                </form>
+            </div>
+            <div class="table-wrapper">
+                <table id="risk-table">
+                    <thead>
+                        <tr>
+                            <th>Project</th>
+                            <th>Description</th>
+                            <th>Impact</th>
+                            <th>Mitigation Plan</th>
+                            <th>Owner</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="risk-list"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Section for Upskill Requirements -->
+        <div id="upskilling" class="tab-content">
+            <h2>Upskill Requirements (Fast Forward)</h2>
+            <div class="form-container">
+                <form id="upskill-form">
+                    <div class="form-grid">
+                        <input type="text" id="associate-name-input" placeholder="Associate Name" required>
+                        <input type="text" id="upskill-tower-project-input" placeholder="Tower/Project" required>
+                        <input type="text" id="nominating-poc-input" placeholder="Nominating POC" required>
+                        <input type="date" id="training-start-input" required title="Training Start Date">
+                        <input type="date" id="training-end-input" required title="Training End Date">
+                        <select id="so-status-input">
+                            <option value="Not Created">SO Not Created</option>
+                            <option value="Created">SO Created</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="add-btn">Add Upskill Requirement</button>
+                </form>
+            </div>
+            <div class="table-wrapper">
+                <table id="upskill-table">
+                    <thead>
+                        <tr>
+                            <th>Associate Name</th>
+                            <th>Tower/Project</th>
+                            <th>Nominating POC</th>
+                            <th>Training Start</th>
+                            <th>Training End</th>
+                            <th>FF SO# Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="upskill-list"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // NOTE: This application uses JavaScript for logic, which runs in the browser.
+        // This is the standard for single-file web applications. "Java" is a different
+        // language typically used for server-side applications.
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM Element References ---
+            const app = document.getElementById('app');
+            const tabButtons = document.querySelectorAll('.tab-btn');
+            const tabContents = document.querySelectorAll('.tab-content');
+            const printBtn = document.getElementById('print-btn');
+
+            // --- Tab Switching Logic ---
+            function switchTab(event) {
+                if (!event.target.matches('.tab-btn')) return;
+
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+
+                event.target.classList.add('active');
+                const tabId = event.target.dataset.tab;
+                document.getElementById(tabId).classList.add('active');
+            }
+
+            // --- Generic Row Creation Logic ---
+            function createRow(tableBody, cellsData, rowClass = '') {
+                const row = tableBody.insertRow();
+                if (rowClass) {
+                    row.className = rowClass;
+                }
+
+                cellsData.forEach(data => {
+                    row.insertCell().textContent = data || 'N/A';
+                });
+
+                // Add the delete button cell
+                const actionCell = row.insertCell();
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.className = 'delete-btn';
+                actionCell.appendChild(deleteBtn);
+            }
+
+            // --- Form Submission Handling ---
+            function handleFormSubmit(event) {
+                event.preventDefault();
+                const form = event.target;
+
+                if (form.id === 'requirement-form') {
+                    const tableBody = document.getElementById('requirement-list');
+                    const cells = [
+                        form.elements['skill-input'].value,
+                        form.elements['tower-input'].value,
+                        form.elements['location-input'].value,
+                        form.elements['raised-by-input'].value,
+                        form.elements['poc-input'].value
+                    ];
+                    createRow(tableBody, cells);
+                } else if (form.id === 'risk-form') {
+                    const tableBody = document.getElementById('risk-list');
+                    const impact = form.elements['impact-input'].value;
+                    const cells = [
+                        form.elements['project-input'].value,
+                        form.elements['risk-desc-input'].value,
+                        impact,
+                        form.elements['mitigation-input'].value,
+                        form.elements['risk-owner-input'].value
+                    ];
+                    createRow(tableBody, cells, `impact-${impact}`);
+                } else if (form.id === 'upskill-form') {
+                    const tableBody = document.getElementById('upskill-list');
+                    const cells = [
+                        form.elements['associate-name-input'].value,
+                        form.elements['upskill-tower-project-input'].value,
+                        form.elements['nominating-poc-input'].value,
+                        form.elements['training-start-input'].value,
+                        form.elements['training-end-input'].value,
+                        form.elements['so-status-input'].value
+                    ];
+                    createRow(tableBody, cells);
+                }
+
+                form.reset();
+            }
+
+            // --- Function to handle row deletion ---
+            function handleAppClick(event) {
+                // Handle delete button clicks
+                if (event.target.matches('.delete-btn')) {
+                    event.target.closest('tr').remove();
+                }
+
+                // Handle tab switching
+                if (event.target.matches('.tab-btn')) {
+                    switchTab(event);
+                }
+            }
+
+            // --- Event Listeners ---
+            app.addEventListener('click', handleAppClick);
+            app.addEventListener('submit', handleFormSubmit);
+            printBtn.addEventListener('click', () => {
+                window.print();
+            });
+        });
+    </script>
+
+</body>
+</html>
